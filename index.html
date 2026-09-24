@@ -5,33 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ระบบจัดการเอกสารอิเล็กทรอนิกส์ | ภาควิชาเทคโนโลยีและสื่อสารการศึกษา ม.มหาสารคาม</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
-tailwind.config = { theme: { extend: {
-  colors: { brand: {50:'#eff6ff',100:'#dbeafe',600:'#1d5fb8',700:'#174c94',800:'#123c76',900:'#0d2d59'} },
-  fontFamily: { sans: ['Sarabun','ui-sans-serif','sans-serif'] }
+tailwind.config={theme:{extend:{
+  colors:{brand:{50:'#eff6ff',100:'#dbeafe',600:'#1d5fb8',700:'#174c94',800:'#123c76',900:'#0d2d59'}},
+  fontFamily:{sans:['Sarabun','ui-sans-serif','sans-serif']}
 }}};
 </script>
 <style>
-  #print-area{display:none}
-  @media print{
-    body>*:not(#print-area){display:none!important}
-    #print-area{display:block!important}
-    @page{size:A4;margin:1.5cm}
-  }
-  ::-webkit-scrollbar{width:8px;height:8px}
-  ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+body{font-family:'Sarabun',sans-serif}
+#print-area{display:none}
+@media print{body>*:not(#print-area){display:none!important}#print-area{display:block!important}@page{size:A4;margin:2cm}}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
 </style>
 </head>
-<body class="bg-slate-100 font-sans">
+<body class="bg-slate-100">
 
 <!-- ================= หน้าเข้าสู่ระบบ ================= -->
 <div id="login-page" class="min-h-screen flex items-center justify-center p-4" style="background:linear-gradient(135deg,#0d2d59,#174c94 55%,#1d5fb8)">
   <div class="w-full max-w-md">
     <div class="bg-white rounded-2xl shadow-2xl p-8">
       <div class="text-center mb-6">
-        <div class="w-20 h-20 mx-auto rounded-2xl bg-brand-800 text-white flex items-center justify-center text-2xl font-bold mb-3">EDU<br><span class="text-xs font-normal">TECH</span></div>
+        <div class="w-20 h-20 mx-auto rounded-2xl bg-brand-800 text-white flex items-center justify-center font-bold mb-3 leading-tight"><div class="text-center">EDU<br><span class="text-[10px] font-normal tracking-widest">TECH</span></div></div>
         <h1 class="text-xl font-bold text-slate-800">ระบบจัดการเอกสารอิเล็กทรอนิกส์</h1>
         <p class="text-sm text-slate-500 mt-1">ภาควิชาเทคโนโลยีและสื่อสารการศึกษา</p>
         <p class="text-xs text-slate-500">คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
@@ -39,16 +34,16 @@ tailwind.config = { theme: { extend: {
       <form id="login-form" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">อีเมล</label>
-          <input id="login-email" type="email" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="name@msu.ac.th">
+          <input id="login-email" type="email" required autocomplete="username" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="name@msu.ac.th">
         </div>
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">รหัสผ่าน</label>
-          <input id="login-pass" type="password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="รองรับตัวอักษร ตัวเลข และอักขระพิเศษ">
+          <input id="login-pass" type="password" required autocomplete="current-password" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="รองรับตัวอักษร ตัวเลข และอักขระพิเศษ">
         </div>
         <p id="login-error" class="text-red-600 text-sm hidden"></p>
-        <button class="w-full py-2.5 rounded-lg bg-brand-700 hover:bg-brand-800 text-white font-semibold transition">เข้าสู่ระบบ</button>
+        <button id="login-btn" type="submit" class="w-full py-2.5 rounded-lg bg-brand-700 hover:bg-brand-800 text-white font-semibold transition">เข้าสู่ระบบ</button>
       </form>
-      <p id="demo-hint" class="mt-4 text-xs text-center text-slate-400"></p>
+      <div id="demo-hint" class="mt-4 text-xs text-center text-slate-400 leading-relaxed"></div>
     </div>
     <p class="text-center text-white/60 text-xs mt-4">© 2025 ภาควิชาเทคโนโลยีและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
   </div>
@@ -60,7 +55,7 @@ tailwind.config = { theme: { extend: {
     <aside id="sidebar" class="fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 bg-brand-900 text-white flex flex-col transition-transform -translate-x-full lg:translate-x-0">
       <div class="p-5 border-b border-white/10">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-white/10 flex items-center justify-center font-bold">EDU</div>
+          <div class="w-11 h-11 rounded-lg bg-white/10 flex items-center justify-center font-bold text-sm text-center leading-tight">EDU<br>TECH</div>
           <div>
             <div class="font-bold leading-tight">ระบบจัดการเอกสาร</div>
             <div class="text-xs text-white/60">สารบรรณอิเล็กทรอนิกส์</div>
@@ -68,7 +63,7 @@ tailwind.config = { theme: { extend: {
         </div>
       </div>
       <nav id="nav" class="flex-1 p-3 space-y-1 overflow-y-auto text-sm"></nav>
-      <div class="p-4 border-t border-white/10 text-xs text-white/40">ฐานข้อมูล: Google Sheets</div>
+      <div class="p-4 border-t border-white/10 text-xs text-white/40">ฐานข้อมูล: <span id="db-mode">—</span></div>
     </aside>
     <div class="flex-1 min-w-0">
       <header class="bg-white border-b sticky top-0 z-30">
@@ -77,7 +72,7 @@ tailwind.config = { theme: { extend: {
           <h2 id="page-title" class="font-bold text-slate-800"></h2>
           <div class="ml-auto flex items-center gap-3">
             <span id="demo-badge" class="hidden text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium"></span>
-            <div class="text-right">
+            <div class="text-right hidden sm:block">
               <div id="user-name" class="text-sm font-semibold text-slate-700"></div>
               <div id="user-role" class="text-xs text-slate-400"></div>
             </div>
@@ -100,9 +95,9 @@ tailwind.config = { theme: { extend: {
  * (เว้นว่าง = โหมดตัวอย่าง Mockup ใช้ข้อมูลจำลองในเบราว์เซอร์)
  * ============================================================ */
 const APP_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbxTKMXBdHBUBtRakBD-mFFSLQ4_yLMXW76gs_lTcVigweHpAj7ies4LJ8W3GYndjzk/exec',
+  API_URL: '',
   ORG_FULL: 'ภาควิชาเทคโนโลยีและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม',
-  ORG_ADDRESS: 'สำนักงานอธิการบดี ตำบลขามเรียง อำเภอกันทรวิชัย จังหวัดมหาสารคาม 44150',
+  ORG_ADDRESS: 'ตำบลขามเรียง อำเภอกันทรวิชัย จังหวัดมหาสารคาม 44150',
   DOC_PREFIX: 'ศษ 0301/ว',
 };
 const DEMO = !APP_CONFIG.API_URL;
@@ -111,7 +106,12 @@ const DOC_TYPES = { internal:'บันทึกข้อความภาย�
 const URG = ['ปกติ','ด่วน','ด่วนมาก','ด่วนที่สุด'];
 const CLS = ['ปกติ','ลับ','ลับมาก','ลับที่สุด'];
 const THAI_M = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-const THAI_M_S = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const PERM_DEF = {
+  documents:{label:'ทะเบียนเอกสาร', acts:{create:'สร้างเอกสาร', read:'ดูรายการ', update:'แก้ไข', delete:'ลบ'}},
+  categories:{label:'หมวดหมู่เอกสาร', acts:{manage:'จัดการหมวดหมู่'}},
+  users:{label:'ผู้ใช้งาน', acts:{manage:'จัดการผู้ใช้'}},
+  logs:{label:'บันทึกกิจกรรม', acts:{view:'ดูประวัติการใช้งาน'}}
+};
 
 /* ---------- ตัวช่วยทั่วไป ---------- */
 const $ = s => document.querySelector(s);
@@ -120,6 +120,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const BTN_P='px-4 py-2 rounded-lg bg-brand-700 text-white text-sm font-medium hover:bg-brand-800 transition';
 const BTN_G='px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition';
 const BTN_O='px-4 py-2 rounded-lg border border-brand-600 text-brand-700 text-sm font-medium hover:bg-brand-50 transition';
+const BTN_R='px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-medium hover:bg-red-100 transition';
 const INP='w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-1 focus:ring-brand-600 text-sm';
 const LBL='block text-sm font-medium text-slate-700 mb-1';
 
@@ -128,6 +129,12 @@ function thaiDate(v){ const d=parseDate(v); return d? `${d.getDate()} ${THAI_M[d
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function dtLoc(v){ const d=new Date(v); return isNaN(d)?String(v||''):d.toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'}); }
 function safeParse(s){ try{return JSON.parse(s||'{}')}catch(e){return{}} }
+function catName(id){ const c=S.cats.find(x=>x.id===id); return c? c.code+' '+c.name : '—'; }
+function typeBadge(t){
+  const m={internal:'bg-blue-100 text-blue-700',incoming:'bg-amber-100 text-amber-700',outgoing:'bg-emerald-100 text-emerald-700'};
+  return `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${m[t]||'bg-slate-100 text-slate-600'}">${esc(DOC_TYPES[t]||t)}</span>`;
+}
+function urgBadge(u){ return (u&&u!=='ปกติ')?`<span class="text-xs px-2 py-0.5 rounded-full font-semibold bg-red-100 text-red-700">${esc(u)}</span>`:`<span class="text-xs text-slate-500">${esc(u||'ปกติ')}</span>`; }
 
 function toast(msg, type='success'){
   const el=document.createElement('div');
@@ -135,11 +142,13 @@ function toast(msg, type='success'){
   el.textContent=msg; $('#toast-root').appendChild(el);
   setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)},2800);
 }
-function openModal(title, bodyHTML){
-  $('#modal-root').innerHTML=`<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-    <div class="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10"><h3 class="font-bold text-slate-800">${title}</h3>
-    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-xl">✕</button></div>
-    <div class="p-5">${bodyHTML}</div></div>`;
+function openModal(title, bodyHTML, wide){
+  const w = wide? 'max-w-3xl':'max-w-2xl';
+  $('#modal-root').innerHTML=`<div class="bg-white rounded-xl shadow-2xl w-full ${w} max-h-[92vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
+      <h3 class="font-bold text-slate-800">${title}</h3>
+      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">✕</button>
+    </div><div class="p-5">${bodyHTML}</div></div>`;
   $('#modal-root').classList.remove('hidden');
 }
 function closeModal(){ $('#modal-root').classList.add('hidden'); $('#modal-root').innerHTML=''; }
@@ -147,14 +156,23 @@ function closeModal(){ $('#modal-root').classList.add('hidden'); $('#modal-root'
 function confirmBox(msg){
   return new Promise(res=>{
     openModal('ยืนยันการดำเนินการ',`<p class="text-slate-600">${msg}</p>
-      <div class="flex gap-2 justify-end mt-5"><button id="cf-no" class="${BTN_G}">ยกเลิก</button><button id="cf-yes" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">ยืนยัน</button></div>`);
+      <div class="flex gap-2 justify-end mt-5"><button id="cf-no" class="${BTN_G}">ยกเลิก</button>
+      <button id="cf-yes" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">ยืนยัน</button></div>`);
     $('#cf-yes').onclick=()=>{closeModal();res(true)}; $('#cf-no').onclick=()=>{closeModal();res(false)};
   });
+}
+function fileToBase64(file){
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); });
+}
+function download(name, content, mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime||'text/plain;charset=utf-8'}));
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
 
 /* ---------- State ---------- */
 let S = { token: localStorage.getItem('edoc_token')||'', user:null, docs:[], cats:[], users:[], logs:[],
-          filters:{q:'',type:'',cat:'',from:'',to:''}, view:'dashboard', param:null, viewingDoc:null };
+          filters:{q:'',type:'',cat:'',from:'',to:''}, dashMonth:'', view:'dashboard', param:null };
 let pendingFile = null;
 
 function can(area, act){
@@ -165,23 +183,26 @@ function can(area, act){
 }
 
 /* ============================================================
- * ชั้นเรียก API — เชื่อม Google Apps Script (หรือโหมดตัวอย่าง)
+ * ชั้นเรียก API (จริง = Google Apps Script / จำลอง = localStorage)
  * ============================================================ */
 async function api(action, data={}){
   if(DEMO) return demoApi(action, data);
   try{
     const res = await fetch(APP_CONFIG.API_URL, {
       method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'}, // หลีกเลี่ยง CORS preflight
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({...data, action, token:S.token})
     });
     const out = await res.json();
     if(out && out.success===false && /เซสชัน|ไม่พบผู้ใช้/.test(out.message||'')) forceLogout();
     return out;
-  }catch(err){ return {success:false, message:'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ: '+err.message}; }
+  }catch(err){
+    return {success:false, message:'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ: '+err.message+' — ตรวจสอบว่า Deploy แบบ "Anyone" และ API_URL ถูกต้อง'};
+  }
 }
+function forceLogout(){ localStorage.removeItem('edoc_token'); localStorage.removeItem('edoc_demo_email'); location.reload(); }
 
-/* ---------- โหมดตัวอย่าง (Mockup) — ข้อมูลจำลองใน localStorage ---------- */
+/* ---------- โหมดตัวอย่าง: ฐานข้อมูลจำลอง ---------- */
 const DEMO_SEED = {
   users:[
     {id:'U0001',email:'admin@msu.ac.th',pass:'Admin@123',name:'ผู้ดูแลระบบ',position:'ผู้ดูแลระบบ',role:'admin',permissions:'{}',status:'active',lastLogin:''},
@@ -201,6 +222,764 @@ const DEMO_SEED = {
     {id:'C10',code:'10',name:'อื่น ๆ',description:'เอกสารที่ไม่เข้าหมวดข้างต้น',active:true,sort:10}
   ],
   docs:[
-    {id:'D00001',number:'ศษ 0301/ว 0001/2568',refNumber:'',type:'internal',title:'ขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการ "การพัฒนาสื่อการสอนดิจิทัลสำหรับการจัดการเรียนรู้ออนไลน์"',date:'2025-01-15',categoryId:'C07',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา มีนโยบายพัฒนาศักยภาพอาจารย์และบุคลากรด้านการผลิตสื่อการสอนดิจิทัล เพื่อยกระดับคุณภาพการจัดการเรียนรู้ จึงขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการดังกล่าว ระหว่างวันที่ 20-21 มีนาคม 2568 ณ ห้องปฏิบัติการคอมพิวเตอร์ ภาควิชาเทคโนโลยีและสื่อสารการศึกษา โดยมีงบประมาณดำเนินการ 45,000 บาท\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-01-15T09:30:00',updatedAt:'2025-01-15T09:30:00',remark:''},
-    {id:'D00002',number:'ศษ 0301/ว 0002/2568',refNumber:'',type:'internal',title:'ขออนุมัติเบิกจ่ายเงินค่าใช้จ่ายในการจัดประชุมทางวิชาการ ครั้งที่ 1/2568',date:'2025-02-03',categoryId:'C02',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา ได้จัดประชุมทางวิชาการขึ้นเมื่อวันที่ 28 มกราคม 2568 ณ ห้องประชุมภาควิชาฯ มีผู้เข้าร่วมประชุม 25 คน ค่าใช้จ่ายรวมทั้งสิ้น 8,500 บาท ขอเบิกจ่ายจากงบประมาณรายจ่ายดำเนินงาน ประจำปีงบประมาณ พ.ศ. 2568\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somchai@msu.ac.th',createdAt:'2025-02-03T10:15:00',updatedAt:'2025-02-03T10:15:00',remark:''},
-    {id:'D00003',number:'ศษ 0301/ว 0003/2568',refNumber:'',type:'internal',title:'รายงานผลการประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568',date:'2025-02-20',categoryId:'C06',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'การประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568 จัดขึ้นเมื่อวันที่ 19 กุมภาพันธ์ 2568 มีมติที่สำคัญ ดังนี้\n1. เห็นชอบแผนการจัดการเรียนการสอนภาคเรียนที่ 1/2568\n2. เห็นชอบการจัดซื้อคร
+    {id:'D00001',number:'ศษ 0301/ว 0001/2568',refNumber:'',type:'internal',title:'ขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการ "การพัฒนาสื่อการสอนดิจิทัลสำหรับการจัดการเรียนรู้ออนไลน์"',date:'2025-01-15',categoryId:'C07',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา มีนโยบายพัฒนาศักยภาพอาจารย์และบุคลากรด้านการผลิตสื่อการสอนดิจิทัล เพื่อยกระดับคุณภาพการจัดการเรียนรู้ จึงขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการดังกล่าว ระหว่างวันที่ 20-21 มีนาคม 2568 ณ ห้องปฏิบัติการคอมพิวเตอร์ ภาควิชาเทคโนโลยีและสื่อสารการศึกษา โดยมีงบประมาณดำเนินการ 45,000 บาท\n\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-01-15T09:30:00',updatedAt:'2025-01-15T09:30:00',remark:''},
+    {id:'D00002',number:'ศษ 0301/ว 0002/2568',refNumber:'',type:'internal',title:'ขออนุมัติเบิกจ่ายเงินค่าใช้จ่ายในการจัดประชุมทางวิชาการ ครั้งที่ 1/2568',date:'2025-02-03',categoryId:'C02',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา ได้จัดประชุมทางวิชาการขึ้นเมื่อวันที่ 28 มกราคม 2568 ณ ห้องประชุมภาควิชาฯ มีผู้เข้าร่วมประชุม 25 คน ค่าใช้จ่ายรวมทั้งสิ้น 8,500 บาท ขอเบิกจ่ายจากงบประมาณรายจ่ายดำเนินงาน ประจำปีงบประมาณ พ.ศ. 2568\n\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somchai@msu.ac.th',createdAt:'2025-02-03T10:15:00',updatedAt:'2025-02-03T10:15:00',remark:''},
+    {id:'D00003',number:'ศษ 0301/ว 0003/2568',refNumber:'',type:'internal',title:'รายงานผลการประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568',date:'2025-02-20',categoryId:'C06',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'การประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568 จัดขึ้นเมื่อวันที่ 19 กุมภาพันธ์ 2568 มีมติที่สำคัญ ดังนี้\n1. เห็นชอบแผนการจัดการเรียนการสอนภาคเรียนที่ 1/2568\n2. เห็นชอบการจัดซื้อครุภัณฑ์คอมพิวเตอร์เพื่อการสอน จำนวน 10 ชุด\n3. มอบหมายคณะทำงานจัดทำหลักสูตรอบรมระยะสั้นด้านสื่อสารการศึกษา',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-02-20T14:00:00',updatedAt:'2025-02-20T14:00:00',remark:''},
+    {id:'D00004',number:'ศธ 0403/1047',refNumber:'ลง 24 กุมภาพันธ์ 2568',type:'incoming',title:'ขอส่งรายชื่ออาจารย์ที่ปรึกษาโครงการพัฒนาสื่อนวัตกรรมการเรียนการสอน ประจำปีงบประมาณ พ.ศ. 2568',date:'2025-03-05',categoryId:'C05',fromParty:'คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม',toParty:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',urgency:'ด่วน',classification:'ปกติ',content:'ด้วยคณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม มีนโยบายส่งเสริมการพัฒนาสื่อนวัตกรรมการเรียนการสอน จึงขอให้ภาควิชาเทคโนโลยีและสื่อสารการศึกษา ส่งรายชื่ออาจารย์ที่ปรึกษาโครงการดังกล่าว ภายในวันที่ 20 มีนาคม 2568',signer:'ผศ.ดร.วิภา รักการศึกษา',signerPosition:'รองคณบดีฝ่ายวิชาการ',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somchai@msu.ac.th',createdAt:'2025-03-05T08:45:00',updatedAt:'2025-03-05T08:45:00',remark:'หนังสือรับจากภายนอก'},
+    {id:'D00005',number:'ศษ 0301/ศ 0004/2568',refNumber:'อ้างถึง ศธ 0403/1047',type:'outgoing',title:'ส่งรายชื่ออาจารย์ที่ปรึกษาโครงการพัฒนาสื่อนวัตกรรมการเรียนการสอน',date:'2025-03-18',categoryId:'C05',fromParty:'ภาควิชาเทคโนโลยีและสื่อสารการศึกษา',toParty:'คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม',urgency:'ปกติ',classification:'ปกติ',content:'เรียน รองคณบดีฝ่ายวิชาการ\nอ้างถึง หนังสือคณะศึกษาศาสตร์ ที่ ศธ 0403/1047 ลงวันที่ 24 กุมภาพันธ์ 2568 เรื่อง ขอส่งรายชื่ออาจารย์ที่ปรึกษาโครงการพัฒนาสื่อนวัตกรรมการเรียนการสอน นั้น\nภาควิชาเทคโนโลยีและสื่อสารการศึกษา ได้พิจารณาและคัดเลือกอาจารย์ที่ปรึกษาโครงการ จำนวน 5 ท่าน รายชื่อพร้อมรายละเอียดแนบไปด้วยสิ่งนี้\nจึงเรียนมาเพื่อโปรดทราบ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-03-18T15:20:00',updatedAt:'2025-03-18T15:20:00',remark:''},
+    {id:'D00006',number:'ศษ 0301/ว 0005/2568',refNumber:'',type:'internal',title:'ขออนุมัติการลาไปประชุมวิชาการระดับชาติ ครั้งที่ 12',date:'2025-04-10',categoryId:'C03',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยข้าพเจ้ามีความประสงค์ลาไปประชุมวิชาการระดับชาติ ระหว่างวันที่ 5-7 พฤษภาคม 2568 ณ จังหวัดเชียงใหม่ รวม 3 วัน เพื่อนำเสนอผลงานวิจัยและแลกเปลี่ยนความรู้ทางวิชาการ\n\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ดร.อนันต์ วิชาการ',signerPosition:'อาจารย์ประจำภาควิชา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somchai@msu.ac.th',createdAt:'2025-04-10T11:00:00',updatedAt:'2025-04-10T11:00:00',remark:''},
+    {id:'D00007',number:'มธ 0410/2201',refNumber:'ลง 28 เมษายน 2568',type:'incoming',title:'ประกาศมหาวิทยาลัยมหาสารคาม เรื่อง แนวปฏิบัติการจัดทำสื่อประชาสัมพันธ์ผ่านช่องทางออนไลน์ของหน่วยงาน',date:'2025-05-06',categoryId:'C01',fromParty:'มหาวิทยาลัยมหาสารคาม',toParty:'หน่วยงานภายในมหาวิทยาลัย',urgency:'ปกติ',classification:'ปกติ',content:'เพื่อให้การจัดทำสื่อประชาสัมพันธ์ของทุกหน่วยงานเป็นไปในทิศทางเดียวกันและถูกต้องตามระเบียบ มหาวิทยาลัยจึงขอแจ้งแนวปฏิบัติการจัดทำสื่อประชาสัมพันธ์ผ่านช่องทางออนไลน์ ดังรายละเอียดแนบไปกับประกาศฉบับนี้',signer:'นายกิตติ สื่อสารการศึกษา',signerPosition:'ผู้อำนวยการสำนักประชาสัมพันธ์',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somsri@msu.ac.th',createdAt:'2025-05-06T09:00:00',updatedAt:'2025-05-06T09:00:00',remark:'หนังสือรับจากภายนอก'},
+    {id:'D00008',number:'ศษ 0301/ว 0006/2568',refNumber:'',type:'internal',title:'แจ้งกำหนดการอบรมเชิงปฏิบัติการ "การผลิตสื่อการสอนดิจิทัล" รุ่นที่ 1/2568',date:'2025-05-20',categoryId:'C08',fromParty:'',toParty:'อาจารย์และบุคลากรคณะศึกษาศาสตร์',urgency:'ด่วน',classification:'ปกติ',content:'ภาควิชาเทคโนโลยีและสื่อสารการศึกษา จะจัดอบรมเชิงปฏิบัติการ "การผลิตสื่อการสอนดิจิทัล" รุ่นที่ 1/2568 ระหว่างวันที่ 12-13 มิถุนายน 2568 ณ ห้องปฏิบัติการคอมพิวเตอร์ ชั้น 2 อาคารคณะศึกษาศาสตร์ สำหรับอาจารย์และบุคลากร จำนวน 30 ท่าน ไม่มีค่าใช้จ่าย ยื่นขอสมัครได้ถึงวันที่ 5 มิถุนายน 2568',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-05-20T10:30:00',updatedAt:'2025-05-20T10:30:00',remark:''}
+  ]
+};
+
+function demoDB(){
+  let db=null;
+  try{ db=JSON.parse(localStorage.getItem('edoc_demo_db')||'null'); }catch(e){}
+  if(!db){
+    db={ users:DEMO_SEED.users.map(u=>({...u})), cats:DEMO_SEED.cats.map(c=>({...c})), docs:DEMO_SEED.docs.map(d=>({...d})), logs:[] };
+    localStorage.setItem('edoc_demo_db', JSON.stringify(db));
+  }
+  return db;
+}
+function saveDB(db){ localStorage.setItem('edoc_demo_db', JSON.stringify(db)); }
+function demoUser(db){ const e=localStorage.getItem('edoc_demo_email'); return e? db.users.find(u=>u.email===e):null; }
+function pubU(u){ const {pass,...rest}=u; return rest; }
+function demoNextNumber(db, type){
+  const y=String(new Date().getFullYear()+543); let max=0;
+  db.docs.forEach(d=>{ const m=String(d.number||'').match(/(\d{4})\s*\/\s*(\d{4})\s*$/); if(m&&m[2]===y) max=Math.max(max,parseInt(m[1],10)); });
+  const seq=String(max+1).padStart(4,'0');
+  return type==='internal'? APP_CONFIG.DOC_PREFIX+' '+seq+'/'+y : (type==='incoming'?'รับ ':'ส่ง ')+seq+'/'+y;
+}
+
+async function demoApi(action, data){
+  await sleep(250);
+  const db = demoDB();
+  const dlog=(a,x)=>{ db.logs.unshift({timestamp:new Date().toISOString(), email:(demoUser(db)||{}).email||'-', action:a, detail:x}); db.logs=db.logs.slice(0,300); };
+  switch(action){
+    case 'ping': return {success:true};
+    case 'login': {
+      const email=String(data.email||'').trim().toLowerCase();
+      const u=db.users.find(x=>x.email===email);
+      if(!u || u.pass!==data.password) return {success:false, message:'อีเมลหรือรหัสผ่านไม่ถูกต้อง (โหมดตัวอย่าง: admin@msu.ac.th / Admin@123)'};
+      if(u.status!=='active') return {success:false, message:'บัญชีนี้ถูกระงับการใช้งาน'};
+      u.lastLogin=new Date().toISOString();
+      localStorage.setItem('edoc_demo_email', email);
+      dlog('login','เข้าสู่ระบบสำเร็จ'); saveDB(db);
+      return {success:true, token:'demo-'+Math.random().toString(36).slice(2), user:pubU(u)};
+    }
+    case 'logout': localStorage.removeItem('edoc_demo_email'); return {success:true};
+    case 'me': {
+      const u=demoUser(db);
+      return u? {success:true,user:pubU(u)} : {success:false,message:'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่'};
+    }
+    case 'changePassword': {
+      const u=demoUser(db); if(!u) return {success:false,message:'เซสชันหมดอายุ'};
+      if(u.pass!==data.oldPassword) return {success:false,message:'รหัสผ่านเดิมไม่ถูกต้อง'};
+      if(!data.newPassword||String(data.newPassword).length<6) return {success:false,message:'รหัสผ่านใหม่ต้องยาวอย่างน้อย 6 ตัวอักษร'};
+      u.pass=String(data.newPassword); dlog('changePassword','เปลี่ยนรหัสผ่าน'); saveDB(db);
+      return {success:true,message:'เปลี่ยนรหัสผ่านสำเร็จ'};
+    }
+    case 'documents.list': return {success:true, docs:db.docs.filter(d=>d.status!=='deleted')};
+    case 'documents.save': {
+      const d=data.doc||{};
+      const num=String(d.number||'').trim()||demoNextNumber(db,d.type);
+      if(d.id){
+        const i=db.docs.findIndex(x=>x.id===d.id);
+        if(i<0) return {success:false,message:'ไม่พบเอกสารนี้'};
+        db.docs[i]={...db.docs[i], ...d, number:num, updatedAt:new Date().toISOString()};
+        dlog('documents.update', d.id+' | '+d.title); saveDB(db);
+        return {success:true, id:d.id, number:num};
+      }
+      const id='D'+String(db.docs.length+1).padStart(5,'0');
+      const now=new Date().toISOString();
+      db.docs.push({id, number:num, refNumber:String(d.refNumber||''), type:d.type, title:d.title, date:d.date,
+        categoryId:d.categoryId||'', fromParty:d.fromParty||'', toParty:d.toParty||'', urgency:d.urgency||'ปกติ',
+        classification:d.classification||'ปกติ', content:d.content||'', signer:d.signer||'', signerPosition:d.signerPosition||'',
+        fileId:d.fileId||'', fileName:d.fileName||'', fileUrl:d.fileUrl||'', status:'active',
+        createdBy:(demoUser(db)||{}).email||'-', createdAt:now, updatedAt:now, remark:d.remark||''});
+      dlog('documents.create', id+' | '+d.title); saveDB(db);
+      return {success:true, id, number:num};
+    }
+    case 'documents.delete': {
+      const i=db.docs.findIndex(x=>x.id===data.id);
+      if(i<0) return {success:false,message:'ไม่พบเอกสารนี้'};
+      db.docs[i].status='deleted'; dlog('documents.delete', data.id); saveDB(db);
+      return {success:true};
+    }
+    case 'categories.list': return {success:true, cats:db.cats.slice().sort((a,b)=>String(a.code).localeCompare(String(b.code)))};
+    case 'categories.save': {
+      const c=data.cat||{};
+      if(c.id){
+        const i=db.cats.findIndex(x=>x.id===c.id);
+        if(i<0) return {success:false,message:'ไม่พบหมวดหมู่นี้'};
+        db.cats[i]={...db.cats[i], code:c.code, name:c.name, description:c.description||'', active:!!c.active};
+      } else {
+        db.cats.push({id:'C'+String(db.cats.length+1).padStart(2,'0'), code:c.code, name:c.name, description:c.description||'', active:!!c.active, sort:parseInt(c.code)||99});
+      }
+      dlog('categories.save', c.code+' '+c.name); saveDB(db);
+      return {success:true};
+    }
+    case 'categories.delete': {
+      const i=db.cats.findIndex(x=>x.id===data.id);
+      if(i<0) return {success:false,message:'ไม่พบหมวดหมู่นี้'};
+      if(db.docs.some(d=>d.categoryId===data.id && d.status!=='deleted')) return {success:false,message:'มีเอกสารใช้หมวดหมู่นี้อยู่ กรุณาปิดการใช้งานแทนการลบ'};
+      db.cats.splice(i,1); dlog('categories.delete', data.id); saveDB(db);
+      return {success:true};
+    }
+    case 'users.list': return {success:true, users:db.users.map(pubU)};
+    case 'users.save': {
+      const u=data.user||{};
+      const email=String(u.email||'').trim().toLowerCase();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return {success:false,message:'รูปแบบอีเมลไม่ถูกต้อง'};
+      let perms = typeof u.permissions==='string'? u.permissions : JSON.stringify(u.permissions||{});
+      if(u.id){
+        const i=db.users.findIndex(x=>x.id===u.id);
+        if(i<0) return {success:false,message:'ไม่พบผู้ใช้งานนี้'};
+        if(db.users.some((x,j)=>j!==i&&x.email===email)) return {success:false,message:'อีเมลนี้ถูกใช้งานโดยบัญชีอื่นแล้ว'};
+        db.users[i]={...db.users[i], email, name:u.name||'', position:u.position||'', role:u.role==='admin'?'admin':'user', permissions:perms, status:u.status==='inactive'?'inactive':'active'};
+        if(u.password) db.users[i].pass=String(u.password);
+      } else {
+        if(!u.password||String(u.password).length<6) return {success:false,message:'รหัสผ่านต้องยาวอย่างน้อย 6 ตัวอักษร'};
+        if(db.users.some(x=>x.email===email)) return {success:false,message:'อีเมลนี้ถูกใช้งานแล้ว'};
+        db.users.push({id:'U'+String(db.users.length+1).padStart(4,'0'), email, pass:String(u.password), name:u.name||'', position:u.position||'', role:u.role==='admin'?'admin':'user', permissions:perms, status:u.status==='inactive'?'inactive':'active', lastLogin:''});
+      }
+      dlog('users.save', email); saveDB(db);
+      return {success:true};
+    }
+    case 'users.delete': {
+      const cur=demoUser(db);
+      const i=db.users.findIndex(x=>x.id===data.id);
+      if(i<0) return {success:false,message:'ไม่พบผู้ใช้งานนี้'};
+      if(db.users[i].email===cur.email) return {success:false,message:'ไม่สามารถลบบัญชีของตัวเองได้'};
+      db.users.splice(i,1); dlog('users.delete', data.id); saveDB(db);
+      return {success:true};
+    }
+    case 'files.upload': {
+      dlog('files.upload', data.fileName||'ไฟล์'); saveDB(db);
+      return {success:true, file:{id:'demo'+Date.now(), name:data.fileName||'file', url:'#'}};
+    }
+    case 'logs.list': return {success:true, logs:db.logs.slice(0,300)};
+    default: return {success:false, message:'ไม่พบ action: '+action};
+  }
+}
+
+/* ============================================================
+ * การเข้าสู่ระบบ
+ * ============================================================ */
+ $('#login-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const errEl=$('#login-error');
+  errEl.classList.add('hidden');
+  const btn=$('#login-btn'); btn.disabled=true; btn.textContent='กำลังตรวจสอบ...';
+  const out = await api('login', { email:$('#login-email').value.trim(), password:$('#login-pass').value });
+  btn.disabled=false; btn.textContent='เข้าสู่ระบบ';
+  if(out && out.success){
+    S.token=out.token; localStorage.setItem('edoc_token', out.token); S.user=out.user;
+    enterApp();
+  } else {
+    errEl.textContent=(out&&out.message)||'เข้าสู่ระบบไม่สำเร็จ';
+    errEl.classList.remove('hidden');
+  }
+});
+ $('#logout-btn').addEventListener('click', async ()=>{ await api('logout'); forceLogout(); });
+ $('#menu-btn').addEventListener('click', ()=> $('#sidebar').classList.toggle('-translate-x-full'));
+
+async function enterApp(){
+  $('#login-page').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  $('#user-name').textContent=S.user.name||S.user.email;
+  $('#user-role').textContent=S.user.role==='admin'?'ผู้ดูแลระบบ':'ผู้ใช้ทั่วไป';
+  if(DEMO){
+    $('#demo-badge').classList.remove('hidden');
+    $('#demo-badge').textContent='โหมดตัวอย่าง — ข้อมูลจำลอง';
+    $('#db-mode').textContent='โหมดตัวอย่าง (localStorage)';
+  } else {
+    $('#db-mode').textContent='Google Sheets';
+  }
+  buildNav();
+  const [dr, cr] = await Promise.all([api('documents.list'), api('categories.list')]);
+  if(dr && dr.success) S.docs=dr.docs;
+  if(cr && cr.success) S.cats=cr.cats;
+  go('dashboard');
+}
+
+/* ============================================================
+ * เมนูและการนำทาง
+ * ============================================================ */
+function navItems(){
+  const it=[{id:'dashboard',label:'แดชบอร์ด',icon:'📊'}];
+  if(can('documents','read')||can('documents','create')) it.push({id:'documents',label:'ทะเบียนเอกสาร',icon:'📄'});
+  if(can('categories','manage')) it.push({id:'categories',label:'หมวดหมู่เอกสาร',icon:'🗂️'});
+  if(can('users','manage')) it.push({id:'users',label:'จัดการผู้ใช้งาน',icon:'👥'});
+  if(can('logs','view')) it.push({id:'logs',label:'บันทึกกิจกรรม',icon:'🕘'});
+  it.push({id:'account',label:'บัญชีผู้ใช้',icon:'🔑'});
+  return it;
+}
+function buildNav(){
+  $('#nav').innerHTML = navItems().map(n=>
+    `<button data-nav="${n.id}" onclick="go('${n.id}')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-left ${S.view===n.id?'bg-white/15':''}">
+      <span>${n.icon}</span><span>${n.label}</span></button>`).join('');
+}
+function go(view, param){
+  S.view=view; S.param=param||null;
+  document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('bg-white/15', b.dataset.nav===view));
+  render();
+  if(view==='users'&&can('users','manage')) loadUsers();
+  if(view==='logs'&&can('logs','view')) loadLogs();
+  window.scrollTo(0,0);
+  if(window.innerWidth<1024) $('#sidebar').classList.add('-translate-x-full');
+}
+const TITLES={dashboard:'แดชบอร์ดสรุปเอกสาร',documents:'ทะเบียนเอกสาร',categories:'จัดการหมวดหมู่เอกสาร',users:'จัดการผู้ใช้งานและสิทธิ์',logs:'บันทึกกิจกรรมการใช้งาน',account:'บัญชีผู้ใช้',docview:'รายละเอียดเอกสาร'};
+function render(){
+  $('#page-title').textContent=TITLES[S.view]||'';
+  const fn={dashboard:vDashboard,documents:vDocuments,categories:vCategories,users:vUsers,logs:vLogs,account:vAccount,docview:vDocView}[S.view];
+  $('#view').innerHTML = fn? fn() : '';
+}
+
+/* ============================================================
+ * แดชบอร์ด
+ * ============================================================ */
+function monthOptions(){
+  const ys=new Set(S.docs.map(d=>String(d.date||'').slice(0,7)).filter(Boolean));
+  const arr=[...ys].sort().reverse();
+  return arr.map(m=>`<option value="${m}" ${S.dashMonth===m?'selected':''}>${THAI_M[+m.slice(5,7)-1]} ${+m.slice(0,4)+543}</option>`).join('');
+}
+function vDashboard(){
+  const all=S.docs.filter(d=>d.status!=='deleted');
+  const m=S.dashMonth;
+  const list=m? all.filter(d=>String(d.date||'').slice(0,7)===m) : all;
+  const c=t=>list.filter(d=>d.type===t).length;
+  const cards=[
+    ['ทั้งหมดในระบบ', all.length, 'bg-brand-800'],
+    ['บันทึกข้อความภายใน', c('internal'), 'bg-blue-600'],
+    ['หนังสือรับจากภายนอก', c('incoming'), 'bg-amber-500'],
+    ['หนังสือส่งภายนอก', c('outgoing'), 'bg-emerald-600'],
+    ['เดือนปัจจุบัน', all.filter(d=>String(d.date||'').slice(0,7)===todayISO().slice(0,7)).length, 'bg-slate-600'],
+  ];
+  const maxC=Math.max(1,...S.cats.map(ct=>list.filter(d=>d.categoryId===ct.id).length));
+  const bars=S.cats.map(ct=>{
+    const n=list.filter(d=>d.categoryId===ct.id).length;
+    return n? `<div class="flex items-center gap-2 text-xs"><span class="w-56 truncate text-slate-600">${esc(ct.code)} ${esc(ct.name)}</span>
+      <div class="flex-1 h-4 bg-slate-100 rounded overflow-hidden"><div class="h-full bg-brand-600 rounded" style="width:${Math.round(n/maxC*100)}%"></div></div>
+      <span class="w-6 text-right font-semibold text-slate-700">${n}</span></div>`:'';
+  }).join('');
+  const recent=[...list].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,8);
+  return `
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <select onchange="S.dashMonth=this.value;render()" class="${INP} !w-auto">
+      <option value="">ทุกเดือน (ทั้งหมด)</option>${monthOptions()}
+    </select>
+    <button onclick="exportCSV()" class="${BTN_O}">⬇ ส่งออกรายงาน CSV (Excel)</button>
+  </div>
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+    ${cards.map(c=>`<div class="${c[2]} text-white rounded-xl p-4">
+      <div class="text-3xl font-bold">${c[1]}</div>
+      <div class="text-xs mt-1 opacity-80">${c[0]}</div></div>`).join('')}
+  </div>
+  <div class="grid lg:grid-cols-2 gap-5">
+    <div class="bg-white rounded-xl border p-5">
+      <h3 class="font-bold text-slate-800 mb-3">สถิติตามหมวดหมู่เอกสาร${m?' (เดือนที่เลือก)':''}</h3>
+      <div class="space-y-2">${bars||'<p class="text-sm text-slate-400">ไม่มีข้อมูล</p>'}</div>
+    </div>
+    <div class="bg-white rounded-xl border p-5">
+      <h3 class="font-bold text-slate-800 mb-3">เอกสารล่าสุด</h3>
+      <div class="divide-y text-sm">
+        ${recent.map(d=>`<div class="py-2 flex items-center gap-2 cursor-pointer hover:bg-slate-50 -mx-2 px-2 rounded" onclick="go('docview','${d.id}')">
+          <div class="min-w-0 flex-1"><div class="truncate font-medium text-slate-700">${esc(d.title)}</div>
+          <div class="text-xs text-slate-400">${esc(d.number)} · ${thaiDate(d.date)}</div></div>${typeBadge(d.type)}</div>`).join('')||'<p class="text-slate-400 text-sm">ไม่มีข้อมูล</p>'}
+      </div>
+    </div>
+  </div>`;
+}
+function exportCSV(){
+  const m=S.dashMonth;
+  const list=(m? S.docs.filter(d=>String(d.date||'').slice(0,7)===m) : S.docs).filter(d=>d.status!=='deleted');
+  const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
+  const rows=[['เลขที่','วันที่','ประเภท','หมวดหมู่','เรื่อง','จาก','ถึง','ชั้นความเร็ว','ชั้นความลับ','ผู้บันทึก'].map(q).join(',')]
+    .concat(list.map(d=>[d.number,thaiDate(d.date),DOC_TYPES[d.type],catName(d.categoryId),d.title,d.fromParty,d.toParty,d.urgency,d.classification,d.createdBy].map(q).join(',')));
+  download('รายงานเอกสาร_'+(m||'ทั้งหมด')+'.csv', '\uFEFF'+rows.join('\r\n'), 'text/csv;charset=utf-8');
+  toast('ส่งออกรายงาน CSV แล้ว ('+list.length+' รายการ)');
+}
+
+/* ============================================================
+ * ทะเบียนเอกสาร
+ * ============================================================ */
+function filteredDocs(){
+  const f=S.filters;
+  return S.docs.filter(d=>{
+    if(d.status==='deleted') return false;
+    if(f.type && d.type!==f.type) return false;
+    if(f.cat && d.categoryId!==f.cat) return false;
+    if(f.from && String(d.date||'')<f.from) return false;
+    if(f.to && String(d.date||'')>f.to) return false;
+    if(f.q){ const q=f.q.toLowerCase();
+      return [d.number,d.title,d.content,d.refNumber,d.fromParty,d.toParty].some(x=>String(x||'').toLowerCase().includes(q)); }
+    return true;
+  }).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+}
+function vDocuments(){
+  const list=filteredDocs();
+  const canC=can('documents','create'), canU=can('documents','update'), canD=can('documents','delete');
+  return `
+  <div class="bg-white rounded-xl border p-4 mb-4">
+    <div class="grid md:grid-cols-5 gap-2">
+      <input placeholder="ค้นหา เลขที่/เรื่อง/เนื้อหา..." value="${esc(S.filters.q)}" oninput="S.filters.q=this.value;renderDocTable()" class="${INP} md:col-span-2">
+      <select onchange="S.filters.type=this.value;renderDocTable()" class="${INP}">
+        <option value="">ทุกประเภท</option>
+        ${Object.entries(DOC_TYPES).map(([k,v])=>`<option value="${k}" ${S.filters.type===k?'selected':''}>${v}</option>`).join('')}
+      </select>
+      <select onchange="S.filters.cat=this.value;renderDocTable()" class="${INP}">
+        <option value="">ทุกหมวดหมู่</option>
+        ${S.cats.map(c=>`<option value="${c.id}" ${S.filters.cat===c.id?'selected':''}>${esc(c.code)} ${esc(c.name)}</option>`).join('')}
+      </select>
+      <div class="flex gap-2">
+        <input type="date" value="${S.filters.from}" onchange="S.filters.from=this.value;renderDocTable()" class="${INP}">
+        <input type="date" value="${S.filters.to}" onchange="S.filters.to=this.value;renderDocTable()" class="${INP}">
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-between mb-3">
+    <p class="text-sm text-slate-500">พบ <b class="text-slate-800">${list.length}</b> รายการ</p>
+    ${canC?`<button onclick="openDocForm()" class="${BTN_P}">＋ สร้างเอกสารใหม่</button>`:''}
+  </div>
+  <div class="bg-white rounded-xl border overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-50 text-left text-slate-500 text-xs">
+        <th class="px-3 py-3">เลขที่หนังสือ</th><th class="px-3 py-3">วันที่</th><th class="px-3 py-3">เรื่อง</th>
+        <th class="px-3 py-3">ประเภท</th><th class="px-3 py-3">หมวดหมู่</th><th class="px-3 py-3">ความเร็ว</th><th class="px-3 py-3 text-right">จัดการ</th>
+      </tr></thead>
+      <tbody id="doc-tbody">${docRows(list)}</tbody>
+    </table>
+  </div>`;
+}
+function docRows(list){
+  const canU=can('documents','update'), canD=can('documents','delete');
+  return list.map(d=>`<tr class="border-t hover:bg-slate-50">
+    <td class="px-3 py-2.5 whitespace-nowrap font-medium text-brand-800">${esc(d.number)}</td>
+    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">${thaiDate(d.date)}</td>
+    <td class="px-3 py-2.5 max-w-xs"><div class="truncate" title="${esc(d.title)}">${esc(d.title)}</div></td>
+    <td class="px-3 py-2.5">${typeBadge(d.type)}</td>
+    <td class="px-3 py-2.5 text-slate-600 text-xs">${esc(catName(d.categoryId))}</td>
+    <td class="px-3 py-2.5">${urgBadge(d.urgency)}</td>
+    <td class="px-3 py-2.5 text-right whitespace-nowrap">
+      <button onclick="go('docview','${d.id}')" class="text-brand-700 hover:underline text-xs font-medium">ดู</button>
+      ${canU?` · <button onclick="openDocForm('${d.id}')" class="text-amber-600 hover:underline text-xs font-medium">แก้ไข</button>`:''}
+      ${canD?` · <button onclick="delDoc('${d.id}')" class="text-red-600 hover:underline text-xs font-medium">ลบ</button>`:''}
+    </td></tr>`).join('') || `<tr><td colspan="7" class="px-3 py-10 text-center text-slate-400">ไม่พบเอกสาร</td></tr>`;
+}
+function renderDocTable(){ const el=$('#doc-tbody'); if(el) el.innerHTML=docRows(filteredDocs()); const n=filteredDocs().length; const p=$('#view p b'); if(p) p.textContent=n; }
+async function delDoc(id){
+  if(!await confirmBox('ยืนยันการลบเอกสารนี้? (ระบบจะทำเครื่องหมายลบ ไม่ลบถาวรจากฐานข้อมูล)')) return;
+  const out=await api('documents.delete',{id});
+  if(out.success){ toast('ลบเอกสารแล้ว'); await reloadDocs(); render(); } else toast(out.message,'error');
+}
+async function reloadDocs(){ const r=await api('documents.list'); if(r.success) S.docs=r.docs; }
+
+/* ============================================================
+ * ฟอร์มสร้าง/แก้ไขเอกสาร
+ * ============================================================ */
+function openDocForm(id){
+  if(id && !can('documents','update')) return toast('ไม่มีสิทธิ์แก้ไข','error');
+  if(!id && !can('documents','create')) return toast('ไม่มีสิทธิ์สร้างเอกสาร','error');
+  pendingFile=null;
+  const d=id? S.docs.find(x=>x.id===id) : null;
+  openModal(d?'แก้ไขเอกสาร':'สร้างเอกสารใหม่', `
+  <form id="doc-form" onsubmit="docFormSubmit(event)" class="space-y-4">
+    <input type="hidden" id="df-id" value="${d?esc(d.id):''}">
+    <div class="grid md:grid-cols-2 gap-3">
+      <div><label class="${LBL}">ประเภทเอกสาร *</label>
+        <select id="df-type" class="${INP}" required>
+          ${Object.entries(DOC_TYPES).map(([k,v])=>`<option value="${k}" ${d&&d.type===k?'selected':''}>${v}</option>`).join('')}
+        </select></div>
+      <div><label class="${LBL}">วันที่เอกสาร *</label>
+        <input type="date" id="df-date" class="${INP}" required value="${d?esc(String(d.date||'').slice(0,10)):todayISO()}"></div>
+      <div><label class="${LBL}">เลขที่หนังสือ (เว้นว่าง = ออกให้อัตโนมัติ)</label>
+        <input id="df-number" class="${INP}" value="${d?esc(d.number):''}" placeholder="เช่น ${APP_CONFIG.DOC_PREFIX} 0001/2568"></div>
+      <div><label class="${LBL}">เลขที่อ้างอิง (ถ้ามี)</label>
+        <input id="df-ref" class="${INP}" value="${d?esc(d.refNumber||''):''}" placeholder="อ้างถึงหนังสือเลขที่..."></div>
+      <div class="md:col-span-2"><label class="${LBL}">เรื่อง *</label>
+        <input id="df-title" class="${INP}" required value="${d?esc(d.title):''}"></div>
+      <div><label class="${LBL}">หมวดหมู่ (ทะเบียนเรื่องตามระเบียบราชการ)</label>
+        <select id="df-cat" class="${INP}">
+          <option value="">— ไม่ระบุ —</option>
+          ${S.cats.filter(c=>c.active!==false).map(c=>`<option value="${c.id}" ${d&&d.categoryId===c.id?'selected':''}>${esc(c.code)} ${esc(c.name)}</option>`).join('')}
+        </select></div>
+      <div><label class="${LBL}">ชั้นความเร็ว</label>
+        <select id="df-urg" class="${INP}">${URG.map(u=>`<option ${d&&d.urgency===u?'selected':''}>${u}</option>`).join('')}</select></div>
+      <div><label class="${LBL}">ชั้นความลับ</label>
+        <select id="df-cls" class="${INP}">${CLS.map(u=>`<option ${d&&d.classification===u?'selected':''}>${u}</option>`).join('')}</select></div>
+      <div></div>
+      <div><label class="${LBL}">จาก (หน่วยงานผู้ส่ง)</label>
+        <input id="df-from" class="${INP}" value="${d?esc(d.fromParty||''):''}"></div>
+      <div><label class="${LBL}">ถึง (เรียน)</label>
+        <input id="df-to" class="${INP}" value="${d?esc(d.toParty||''):''}"></div>
+      <div class="md:col-span-2"><label class="${LBL}">เนื้อหา / สาระสำคัญ</label>
+        <textarea id="df-content" rows="6" class="${INP}">${d?esc(d.content||''):''}</textarea></div>
+      <div><label class="${LBL}">ผู้ลงนาม</label>
+        <input id="df-signer" class="${INP}" value="${d?esc(d.signer||''):''}"></div>
+      <div><label class="${LBL}">ตำแหน่งผู้ลงนาม</label>
+        <input id="df-pos" class="${INP}" value="${d?esc(d.signerPosition||''):''}"></div>
+      <div class="md:col-span-2"><label class="${LBL}">ไฟล์แนบ (PDF/ภาพ/อื่น ๆ ≤ 25MB — จัดเก็บใน Google Drive)</label>
+        <input type="file" id="df-file" class="${INP}" onchange="pendingFile=this.files[0]||null;this.nextElementSibling.textContent=pendingFile?('ไฟล์ที่เลือก: '+pendingFile.name):''">
+        <p class="text-xs text-slate-400 mt-1">${d&&d.fileName?('ไฟล์ปัจจุบัน: '+esc(d.fileName)):'ยังไม่มีไฟล์แนบ'}</p></div>
+      <div class="md:col-span-2"><label class="${LBL}">หมายเหตุ</label>
+        <input id="df-remark" class="${INP}" value="${d?esc(d.remark||''):''}"></div>
+    </div>
+    <div class="flex justify-end gap-2 pt-2 border-t">
+      <button type="button" onclick="closeModal()" class="${BTN_G}">ยกเลิก</button>
+      <button type="submit" class="${BTN_P}">💾 บันทึกเอกสาร</button>
+    </div>
+  </form>`, true);
+}
+async function docFormSubmit(e){
+  e.preventDefault();
+  const id=$('#df-id').value;
+  const doc={
+    id:id||'', type:$('#df-type').value, date:$('#df-date').value,
+    number:$('#df-number').value.trim(), refNumber:$('#df-ref').value.trim(),
+    title:$('#df-title').value.trim(), categoryId:$('#df-cat').value,
+    urgency:$('#df-urg').value, classification:$('#df-cls').value,
+    fromParty:$('#df-from').value.trim(), toParty:$('#df-to').value.trim(),
+    content:$('#df-content').value, signer:$('#df-signer').value.trim(),
+    signerPosition:$('#df-pos').value.trim(), remark:$('#df-remark').value.trim(),
+  };
+  if(!doc.title){ toast('กรุณาระบุเรื่อง','error'); return; }
+  if(pendingFile){
+    toast('กำลังอัปโหลดไฟล์...','info');
+    let out;
+    if(DEMO){ out={success:true,file:{id:'demo',name:pendingFile.name,url:'#'}}; }
+    else{
+      const b64=await fileToBase64(pendingFile);
+      out=await api('files.upload',{fileName:pendingFile.name, mimeType:pendingFile.type, base64:b64});
+    }
+    if(out.success){ doc.fileId=out.file.id; doc.fileName=out.file.name; doc.fileUrl=out.file.url; }
+    else{ toast(out.message,'error'); return; }
+  } else if(id){
+    const old=S.docs.find(x=>x.id===id);
+    if(old){ doc.fileId=old.fileId; doc.fileName=old.fileName; doc.fileUrl=old.fileUrl; }
+  }
+  const out=await api('documents.save',{doc});
+  if(out.success){
+    toast((id?'แก้ไข':'สร้าง')+'เอกสารสำเร็จ — เลขที่ '+out.number);
+    closeModal(); await reloadDocs();
+    go('docview', out.id);
+  } else toast(out.message,'error');
+}
+
+/* ============================================================
+ * ดูเอกสาร / พิมพ์ / ส่งออก Word
+ * ============================================================ */
+function vDocView(){
+  const d=S.docs.find(x=>x.id===S.param);
+  if(!d) return '<p class="text-slate-500">ไม่พบเอกสาร</p><button onclick="go(\'documents\')" class="'+BTN_G+' mt-3">← กลับ</button>';
+  const rows=[
+    ['ประเภท', DOC_TYPES[d.type]],
+    ['เลขที่', d.number], ['เลขที่อ้างอิง', d.refNumber||'—'],
+    ['วันที่', thaiDate(d.date)], ['หมวดหมู่', catName(d.categoryId)],
+    ['ชั้นความเร็ว', d.urgency], ['ชั้นความลับ', d.classification],
+    ['จาก', d.fromParty||'—'], ['ถึง', d.toParty||'—'],
+    ['ผู้ลงนาม', (d.signer||'—')+(d.signerPosition?' · '+d.signerPosition:'')],
+    ['ผู้บันทึก', d.createdBy], ['บันทึกเมื่อ', dtLoc(d.createdAt)], ['แก้ไขล่าสุด', dtLoc(d.updatedAt)],
+  ];
+  return `
+  <div class="flex flex-wrap gap-2 mb-4">
+    <button onclick="go('documents')" class="${BTN_G}">← กลับทะเบียน</button>
+    <div class="flex-1"></div>
+    <button onclick="printDoc('${d.id}')" class="${BTN_P}">🖨 พิมพ์เอกสาร</button>
+    <button onclick="exportWord('${d.id}')" class="${BTN_O}">📝 ส่งออก Word</button>
+    ${can('documents','update')?`<button onclick="openDocForm('${d.id}')" class="${BTN_O}">✏ แก้ไข</button>`:''}
+    ${can('documents','delete')?`<button onclick="delDoc('${d.id}').then(()=>go('documents'))" class="${BTN_R}">ลบ</button>`:''}
+  </div>
+  <div class="bg-white rounded-xl border p-6">
+    <h3 class="text-lg font-bold text-slate-800 mb-1">${esc(d.title)}</h3>
+    <div class="mb-4">${typeBadge(d.type)} ${urgBadge(d.urgency)} ${d.classification!=='ปกติ'?`<span class="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-semibold">${esc(d.classification)}</span>`:''}</div>
+    <div class="grid sm:grid-cols-2 gap-x-8 gap-y-1.5 text-sm mb-5">
+      ${rows.map(r=>`<div class="flex gap-2"><span class="text-slate-400 w-28 shrink-0">${r[0]}</span><span class="text-slate-700">${esc(r[1])}</span></div>`).join('')}
+    </div>
+    <div class="border-t pt-4">
+      <h4 class="font-semibold text-slate-700 mb-2">เนื้อหา</h4>
+      <div class="text-slate-700 whitespace-pre-wrap leading-relaxed text-[15px]">${esc(d.content||'—')}</div>
+    </div>
+    ${d.fileUrl&&d.fileUrl!=='#'?`<div class="border-t mt-4 pt-4 text-sm">📎 ไฟล์แนบ: <a href="${esc(d.fileUrl)}" target="_blank" class="text-brand-700 hover:underline font-medium">${esc(d.fileName)}</a></div>`:(d.fileName?`<div class="border-t mt-4 pt-4 text-sm text-slate-500">📎 ไฟล์แนบ (โหมดตัวอย่าง): ${esc(d.fileName)}</div>`:'')}
+    ${d.remark?`<div class="border-t mt-4 pt-4 text-sm text-slate-500">หมายเหตุ: ${esc(d.remark)}</div>`:''}
+  </div>`;
+}
+function docHTML(d){
+  const sig = d.signer? `
+    <div style="margin-top:48px;width:320px;margin-left:auto;text-align:center;font-size:16pt;line-height:1.8">
+      <div>(ลงชื่อ) ........................................</div>
+      <div>( ${esc(d.signer)} )</div>
+      ${d.signerPosition?`<div>${esc(d.signerPosition)}</div>`:''}
+    </div>`:'';
+  const row=(l,v)=>`<tr><td style="width:140px;vertical-align:top">${l}</td><td>${v}</td></tr>`;
+  if(d.type==='internal'){
+    return `<div style="font-family:'TH Sarabun New','Sarabun',serif;font-size:16pt;line-height:1.7">
+      <div style="text-align:right;font-size:12pt">แบบ สธ 03/2553</div>
+      <h2 style="text-align:center;margin:4px 0 14px">บันทึกข้อความ</h2>
+      <table style="width:100%;border-collapse:collapse">
+        ${row('ส่วนราชการ', esc(APP_CONFIG.ORG_FULL)+' '+esc(APP_CONFIG.ORG_ADDRESS))}
+        ${row('ที่', esc(d.number))}
+        ${row('วันที่', thaiDate(d.date))}
+        ${row('เรื่อง', '<b>'+esc(d.title)+'</b>')}
+        ${d.toParty?row('เรียน', esc(d.toParty)):''}
+      </table>
+      <div style="white-space:pre-wrap;margin-top:14px">${esc(d.content||'')}</div>
+      <div>จึงเรียนมาเพื่อโปรดพิจารณา</div>${sig}</div>`;
+  }
+  return `<div style="font-family:'TH Sarabun New','Sarabun',serif;font-size:16pt;line-height:1.7">
+    <div style="text-align:center;font-weight:bold">${esc(APP_CONFIG.ORG_FULL)}</div>
+    <div style="text-align:center;font-size:13pt">${esc(APP_CONFIG.ORG_ADDRESS)}</div>
+    <hr style="border:none;border-top:1.5px solid #000;margin:8px 0 14px">
+    <table style="width:100%;border-collapse:collapse">
+      ${row('ที่', esc(d.number))}
+      ${row('วันที่', thaiDate(d.date))}
+      ${d.refNumber?row('อ้างถึง', esc(d.refNumber)):''}
+      ${row('เรื่อง', '<b>'+esc(d.title)+'</b>')}
+      ${d.fromParty?row('จาก', esc(d.fromParty)):''}
+      ${d.toParty?row('ถึง', esc(d.toParty)):''}
+    </table>
+    <div style="white-space:pre-wrap;margin-top:14px">${esc(d.content||'')}</div>${sig}</div>`;
+}
+function printDoc(id){
+  const d=S.docs.find(x=>x.id===id); if(!d) return;
+  $('#print-area').innerHTML=docHTML(d);
+  window.print();
+}
+function exportWord(id){
+  const d=S.docs.find(x=>x.id===id); if(!d) return;
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>${esc(d.number)}</title>
+<style>body{font-family:'TH Sarabun New','Sarabun',serif;font-size:16pt;line-height:1.7}@page{size:A4;margin:2cm}</style>
+</head><body>${docHTML(d)}</body></html>`;
+  download(String(d.number).replace(/[\\/:*?"<>|]/g,'-')+'.doc', html, 'application/msword');
+  toast('ส่งออกไฟล์ Word แล้ว');
+}
+
+/* ============================================================
+ * จัดการหมวดหมู่
+ * ============================================================ */
+function vCategories(){
+  return `
+  <div class="flex items-center justify-between mb-3">
+    <p class="text-sm text-slate-500">ทะเบียนหมวดเรื่องตามระเบียบงานสารบรรณ (จัดกลุ่มเอกสาร)</p>
+    <button onclick="openCatForm()" class="${BTN_P}">＋ เพิ่มหมวดหมู่</button>
+  </div>
+  <div class="bg-white rounded-xl border overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-50 text-left text-slate-500 text-xs">
+        <th class="px-3 py-3">รหัส</th><th class="px-3 py-3">ชื่อหมวดหมู่</th><th class="px-3 py-3">คำอธิบาย</th>
+        <th class="px-3 py-3">เอกสาร</th><th class="px-3 py-3">สถานะ</th><th class="px-3 py-3 text-right">จัดการ</th>
+      </tr></thead><tbody>
+      ${S.cats.map(c=>`<tr class="border-t hover:bg-slate-50">
+        <td class="px-3 py-2.5 font-mono font-semibold text-brand-800">${esc(c.code)}</td>
+        <td class="px-3 py-2.5 font-medium text-slate-700">${esc(c.name)}</td>
+        <td class="px-3 py-2.5 text-slate-500 text-xs max-w-xs"><div class="truncate" title="${esc(c.description||'')}">${esc(c.description||'—')}</div></td>
+        <td class="px-3 py-2.5">${S.docs.filter(d=>d.categoryId===c.id&&d.status!=='deleted').length}</td>
+        <td class="px-3 py-2.5">${c.active?'<span class="text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">ใช้งาน</span>':'<span class="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">ปิดใช้งาน</span>'}</td>
+        <td class="px-3 py-2.5 text-right whitespace-nowrap">
+          <button onclick="openCatForm('${c.id}')" class="text-amber-600 hover:underline text-xs font-medium">แก้ไข</button> ·
+          <button onclick="delCat('${c.id}')" class="text-red-600 hover:underline text-xs font-medium">ลบ</button>
+        </td></tr>`).join('')}
+      </tbody></table></div>`;
+}
+function openCatForm(id){
+  const c=id? S.cats.find(x=>x.id===id):null;
+  openModal(c?'แก้ไขหมวดหมู่':'เพิ่มหมวดหมู่', `
+  <form onsubmit="catFormSubmit(event)" class="space-y-4">
+    <input type="hidden" id="cf-id" value="${c?esc(c.id):''}">
+    <div class="grid grid-cols-[100px_1fr] gap-3">
+      <div><label class="${LBL}">รหัส *</label><input id="cf-code" class="${INP}" required value="${c?esc(c.code):''}" placeholder="01"></div>
+      <div><label class="${LBL}">ชื่อหมวดหมู่ *</label><input id="cf-name" class="${INP}" required value="${c?esc(c.name):''}"></div>
+    </div>
+    <div><label class="${LBL}">คำอธิบาย</label><input id="cf-desc" class="${INP}" value="${c?esc(c.description||''):''}"></div>
+    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cf-active" ${!c||c.active?'checked':''}> ใช้งานหมวดหมู่นี้</label>
+    <div class="flex justify-end gap-2 pt-2 border-t">
+      <button type="button" onclick="closeModal()" class="${BTN_G}">ยกเลิก</button>
+      <button type="submit" class="${BTN_P}">💾 บันทึก</button>
+    </div></form>`);
+}
+async function catFormSubmit(e){
+  e.preventDefault();
+  const cat={ id:$('#cf-id').value, code:$('#cf-code').value.trim(), name:$('#cf-name').value.trim(),
+    description:$('#cf-desc').value.trim(), active:$('#cf-active').checked };
+  const out=await api('categories.save',{cat});
+  if(out.success){ toast('บันทึกหมวดหมู่แล้ว'); closeModal();
+    const r=await api('categories.list'); if(r.success) S.cats=r.cats; render();
+  } else toast(out.message,'error');
+}
+async function delCat(id){
+  if(!await confirmBox('ยืนยันการลบหมวดหมู่นี้?')) return;
+  const out=await api('categories.delete',{id});
+  if(out.success){ toast('ลบหมวดหมู่แล้ว');
+    const r=await api('categories.list'); if(r.success) S.cats=r.cats; render();
+  } else toast(out.message,'error');
+}
+
+/* ============================================================
+ * จัดการผู้ใช้งานและสิทธิ์
+ * ============================================================ */
+function vUsers(){
+  if(!can('users','manage')) return '<p class="text-slate-500">คุณไม่มีสิทธิ์เข้าถึงส่วนนี้</p>';
+  return `
+  <div class="flex items-center justify-between mb-3">
+    <p class="text-sm text-slate-500">บัญชีผู้ใช้ (อีเมล + รหัสผ่าน) และการกำหนดสิทธิ์รายบุคคล</p>
+    <button onclick="openUserForm()" class="${BTN_P}">＋ เพิ่มผู้ใช้</button>
+  </div>
+  <div class="bg-white rounded-xl border overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-50 text-left text-slate-500 text-xs">
+        <th class="px-3 py-3">ชื่อ-สกุล</th><th class="px-3 py-3">อีเมล</th><th class="px-3 py-3">ตำแหน่ง</th>
+        <th class="px-3 py-3">บทบาท</th><th class="px-3 py-3">สถานะ</th><th class="px-3 py-3">เข้าใช้ล่าสุด</th><th class="px-3 py-3 text-right">จัดการ</th>
+      </tr></thead><tbody id="users-tbody"><tr><td colspan="7" class="px-3 py-10 text-center text-slate-400">กำลังโหลด...</td></tr></tbody>
+    </table></div>`;
+}
+async function loadUsers(){
+  const r=await api('users.list'); if(!r.success) return;
+  S.users=r.users;
+  const tb=$('#users-tbody'); if(!tb) return;
+  tb.innerHTML=S.users.map(u=>`<tr class="border-t hover:bg-slate-50">
+    <td class="px-3 py-2.5 font-medium text-slate-700">${esc(u.name||'—')}</td>
+    <td class="px-3 py-2.5 text-slate-500">${esc(u.email)}</td>
+    <td class="px-3 py-2.5 text-slate-500 text-xs max-w-[200px]"><div class="truncate" title="${esc(u.position||'')}">${esc(u.position||'—')}</div></td>
+    <td class="px-3 py-2.5">${u.role==='admin'?'<span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 font-semibold">ผู้ดูแลระบบ</span>':'<span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">ผู้ใช้ทั่วไป</span>'}</td>
+    <td class="px-3 py-2.5">${u.status==='active'?'<span class="text-xs text-emerald-700">ใช้งาน</span>':'<span class="text-xs text-red-600">ระงับ</span>'}</td>
+    <td class="px-3 py-2.5 text-xs text-slate-400">${u.lastLogin?dtLoc(u.lastLogin):'—'}</td>
+    <td class="px-3 py-2.5 text-right whitespace-nowrap">
+      <button onclick="openUserForm('${u.id}')" class="text-amber-600 hover:underline text-xs font-medium">แก้ไข</button> ·
+      <button onclick="delUser('${u.id}')" class="text-red-600 hover:underline text-xs font-medium">ลบ</button>
+    </td></tr>`).join('');
+}
+function permBoxesHTML(perm){
+  return Object.entries(PERM_DEF).map(([area,def])=>`
+    <div class="border rounded-lg p-3">
+      <div class="font-semibold text-slate-700 text-sm mb-2">${def.label}</div>
+      <div class="flex flex-wrap gap-x-4 gap-y-1.5">
+        ${Object.entries(def.acts).map(([act,label])=>{
+          const on = perm[area] && perm[area][act];
+          return `<label class="flex items-center gap-1.5 text-sm text-slate-600"><input type="checkbox" data-perm="${area}.${act}" ${on?'checked':''}> ${label}</label>`;
+        }).join('')}
+      </div></div>`).join('');
+}
+function openUserForm(id){
+  const u=id? S.users.find(x=>x.id===id):null;
+  const perm=u? safeParse(u.permissions):{};
+  openModal(u?'แก้ไขผู้ใช้งาน':'เพิ่มผู้ใช้งาน', `
+  <form onsubmit="userFormSubmit(event)" class="space-y-4">
+    <input type="hidden" id="uf-id" value="${u?esc(u.id):''}">
+    <div class="grid md:grid-cols-2 gap-3">
+      <div><label class="${LBL}">อีเมล (ใช้เข้าสู่ระบบ) *</label>
+        <input id="uf-email" type="email" class="${INP}" required value="${u?esc(u.email):''}" placeholder="name@msu.ac.th"></div>
+      <div><label class="${LBL}">รหัสผ่าน ${u?'(เว้นว่าง = ไม่เปลี่ยน)':'*'}</label>
+        <input id="uf-pass" type="text" class="${INP}" ${u?'':'required'} placeholder="ตัวอักษร/ตัวเลข/อักขระพิเศษ อย่างน้อย 6 ตัว"></div>
+      <div><label class="${LBL}">ชื่อ-สกุล</label><input id="uf-name" class="${INP}" value="${u?esc(u.name||''):''}"></div>
+      <div><label class="${LBL}">ตำแหน่ง</label><input id="uf-position" class="${INP}" value="${u?esc(u.position||''):''}"></div>
+      <div><label class="${LBL}">บทบาท</label>
+        <select id="uf-role" class="${INP}">
+          <option value="user" ${u&&u.role==='user'?'selected':''}>ผู้ใช้ทั่วไป (กำหนดสิทธิ์รายบุคคล)</option>
+          <option value="admin" ${u&&u.role==='admin'?'selected':''}>ผู้ดูแลระบบ (สิทธิ์ทั้งหมด)</option>
+        </select></div>
+      <div><label class="${LBL}">สถานะ</label>
+        <select id="uf-status" class="${INP}">
+          <option value="active" ${!u||u.status==='active'?'selected':''}>ใช้งาน</option>
+          <option value="inactive" ${u&&u.status==='inactive'?'selected':''}>ระงับ</option>
+        </select></div>
+    </div>
+    <div><label class="${LBL}">สิทธิ์การใช้งาน (สำหรับผู้ใช้ทั่วไป)</label>
+      <div class="grid md:grid-cols-2 gap-2">${permBoxesHTML(perm)}</div></div>
+    <div class="flex justify-end gap-2 pt-2 border-t">
+      <button type="button" onclick="closeModal()" class="${BTN_G}">ยกเลิก</button>
+      <button type="submit" class="${BTN_P}">💾 บันทึก</button>
+    </div></form>`, true);
+}
+async function userFormSubmit(e){
+  e.preventDefault();
+  const p={};
+  document.querySelectorAll('[data-perm]').forEach(cb=>{
+    if(cb.checked){ const [a,x]=cb.dataset.perm.split('.'); (p[a]=p[a]||{})[x]=1; }
+  });
+  const user={ id:$('#uf-id').value, email:$('#uf-email').value.trim(), name:$('#uf-name').value.trim(),
+    position:$('#uf-position').value.trim(), role:$('#uf-role').value, status:$('#uf-status').value,
+    permissions:p, password:$('#uf-pass').value };
+  if(!user.id && String(user.password||'').length<6) return toast('รหัสผ่านต้องยาวอย่างน้อย 6 ตัวอักษร','error');
+  const out=await api('users.save',{user});
+  if(out.success){ toast('บันทึกผู้ใช้งานแล้ว'); closeModal(); loadUsers(); }
+  else toast(out.message,'error');
+}
+async function delUser(id){
+  if(!await confirmBox('ยืนยันการลบบัญชีผู้ใช้นี้?')) return;
+  const out=await api('users.delete',{id});
+  if(out.success){ toast('ลบผู้ใช้แล้ว'); loadUsers(); } else toast(out.message,'error');
+}
+
+/* ============================================================
+ * บันทึกกิจกรรม / บัญชีผู้ใช้
+ * ============================================================ */
+function vLogs(){
+  if(!can('logs','view')) return '<p class="text-slate-500">คุณไม่มีสิทธิ์เข้าถึงส่วนนี้</p>';
+  return `<div class="bg-white rounded-xl border overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-50 text-left text-slate-500 text-xs">
+        <th class="px-3 py-3">วันเวลา</th><th class="px-3 py-3">ผู้ใช้</th><th class="px-3 py-3">การกระทำ</th><th class="px-3 py-3">รายละเอียด</th>
+      </tr></thead><tbody id="logs-tbody"><tr><td colspan="4" class="px-3 py-10 text-center text-slate-400">กำลังโหลด...</td></tr></tbody>
+    </table></div>`;
+}
+async function loadLogs(){
+  const r=await api('logs.list'); if(!r.success) return;
+  const tb=$('#logs-tbody'); if(!tb) return;
+  tb.innerHTML=r.logs.map(l=>`<tr class="border-t">
+    <td class="px-3 py-2 whitespace-nowrap text-slate-500 text-xs">${esc(dtLoc(l.timestamp))}</td>
+    <td class="px-3 py-2 text-slate-600">${esc(l.email)}</td>
+    <td class="px-3 py-2"><span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-mono">${esc(l.action)}</span></td>
+    <td class="px-3 py-2 text-slate-500 text-xs max-w-md"><div class="truncate" title="${esc(l.detail||'')}">${esc(l.detail||'')}</div></td>
+    </tr>`).join('')||'<tr><td colspan="4" class="px-3 py-10 text-center text-slate-400">ไม่มีข้อมูล</td></tr>';
+}
+function vAccount(){
+  return `
+  <div class="grid lg:grid-cols-2 gap-5">
+    <div class="bg-white rounded-xl border p-5">
+      <h3 class="font-bold text-slate-800 mb-4">ข้อมูลบัญชี</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex gap-2"><span class="text-slate-400 w-24">ชื่อ</span><span class="text-slate-700">${esc(S.user.name||'—')}</span></div>
+        <div class="flex gap-2"><span class="text-slate-400 w-24">อีเมล</span><span class="text-slate-700">${esc(S.user.email)}</span></div>
+        <div class="flex gap-2"><span class="text-slate-400 w-24">ตำแหน่ง</span><span class="text-slate-700">${esc(S.user.position||'—')}</span></div>
+        <div class="flex gap-2"><span class="text-slate-400 w-24">บทบาท</span><span class="text-slate-700">${S.user.role==='admin'?'ผู้ดูแลระบบ':'ผู้ใช้ทั่วไป'}</span></div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border p-5">
+      <h3 class="font-bold text-slate-800 mb-4">เปลี่ยนรหัสผ่าน</h3>
+      <form onsubmit="changePassSubmit(event)" class="space-y-3">
+        <div><label class="${LBL}">รหัสผ่านปัจจุบัน</label><input id="cp-old" type="password" class="${INP}" required></div>
+        <div><label class="${LBL}">รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)</label><input id="cp-new" type="password" class="${INP}" required minlength="6"></div>
+        <div><label class="${LBL}">ยืนยันรหัสผ่านใหม่</label><input id="cp-new2" type="password" class="${INP}" required></div>
+        <button type="submit" class="${BTN_P}">เปลี่ยนรหัสผ่าน</button>
+      </form>
+    </div>
+  </div>`;
+}
+async function changePassSubmit(e){
+  e.preventDefault();
+  if($('#cp-new').value!==$('#cp-new2').value) return toast('รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน','error');
+  const out=await api('changePassword',{oldPassword:$('#cp-old').value, newPassword:$('#cp-new').value});
+  if(out.success){ toast(out.message||'เปลี่ยนรหัสผ่านสำเร็จ'); e.target.reset(); }
+  else toast(out.message,'error');
+}
+
+/* ============================================================
+ * เริ่มต้นระบบ
+ * ============================================================ */
+(async function init(){
+  if(DEMO){
+    $('#demo-hint').innerHTML='โหมดตัวอย่าง (Mockup):<br><b>admin@msu.ac.th</b> / <b>Admin@123</b> · <b>somchai@msu.ac.th</b> / <b>123456</b> · <b>somsri@msu.ac.th</b> / <b>123456</b><br><span class="text-slate-300">ล้างข้อมูลจำลอง: ลบ localStorage ของเบราว์เซอร์</span>';
+    if(localStorage.getItem('edoc_demo_email')){
+      const r=await api('me');
+      if(r.success){ S.user=r.user; enterApp(); }
+    }
+  } else if(S.token){
+    const r=await api('me');
+    if(r && r.success){ S.user=r.user; enterApp(); }
+  }
+})();
+</script>
+</body>
+</html>
