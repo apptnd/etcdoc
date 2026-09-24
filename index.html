@@ -1,1 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบจัดการเอกสารอิเล็กทรอนิกส์ | ภาควิชาเทคโนโลยีและสื่อสารการศึกษา ม.มหาสารคาม</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { brand: {50:'#eff6ff',100:'#dbeafe',600:'#1d5fb8',700:'#174c94',800:'#123c76',900:'#0d2d59'} },
+  fontFamily: { sans: ['Sarabun','ui-sans-serif','sans-serif'] }
+}}};
+</script>
+<style>
+  #print-area{display:none}
+  @media print{
+    body>*:not(#print-area){display:none!important}
+    #print-area{display:block!important}
+    @page{size:A4;margin:1.5cm}
+  }
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+</style>
+</head>
+<body class="bg-slate-100 font-sans">
 
+<!-- ================= หน้าเข้าสู่ระบบ ================= -->
+<div id="login-page" class="min-h-screen flex items-center justify-center p-4" style="background:linear-gradient(135deg,#0d2d59,#174c94 55%,#1d5fb8)">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-2xl p-8">
+      <div class="text-center mb-6">
+        <div class="w-20 h-20 mx-auto rounded-2xl bg-brand-800 text-white flex items-center justify-center text-2xl font-bold mb-3">EDU<br><span class="text-xs font-normal">TECH</span></div>
+        <h1 class="text-xl font-bold text-slate-800">ระบบจัดการเอกสารอิเล็กทรอนิกส์</h1>
+        <p class="text-sm text-slate-500 mt-1">ภาควิชาเทคโนโลยีและสื่อสารการศึกษา</p>
+        <p class="text-xs text-slate-500">คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">อีเมล</label>
+          <input id="login-email" type="email" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="name@msu.ac.th">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">รหัสผ่าน</label>
+          <input id="login-pass" type="password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-600 focus:border-brand-600" placeholder="รองรับตัวอักษร ตัวเลข และอักขระพิเศษ">
+        </div>
+        <p id="login-error" class="text-red-600 text-sm hidden"></p>
+        <button class="w-full py-2.5 rounded-lg bg-brand-700 hover:bg-brand-800 text-white font-semibold transition">เข้าสู่ระบบ</button>
+      </form>
+      <p id="demo-hint" class="mt-4 text-xs text-center text-slate-400"></p>
+    </div>
+    <p class="text-center text-white/60 text-xs mt-4">© 2025 ภาควิชาเทคโนโลยีและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
+  </div>
+</div>
+
+<!-- ================= ตัวระบบ ================= -->
+<div id="app" class="hidden min-h-screen">
+  <div class="flex">
+    <aside id="sidebar" class="fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 bg-brand-900 text-white flex flex-col transition-transform -translate-x-full lg:translate-x-0">
+      <div class="p-5 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-lg bg-white/10 flex items-center justify-center font-bold">EDU</div>
+          <div>
+            <div class="font-bold leading-tight">ระบบจัดการเอกสาร</div>
+            <div class="text-xs text-white/60">สารบรรณอิเล็กทรอนิกส์</div>
+          </div>
+        </div>
+      </div>
+      <nav id="nav" class="flex-1 p-3 space-y-1 overflow-y-auto text-sm"></nav>
+      <div class="p-4 border-t border-white/10 text-xs text-white/40">ฐานข้อมูล: Google Sheets</div>
+    </aside>
+    <div class="flex-1 min-w-0">
+      <header class="bg-white border-b sticky top-0 z-30">
+        <div class="flex items-center gap-3 px-4 py-3">
+          <button id="menu-btn" class="lg:hidden px-2 py-1 rounded border border-slate-300">☰</button>
+          <h2 id="page-title" class="font-bold text-slate-800"></h2>
+          <div class="ml-auto flex items-center gap-3">
+            <span id="demo-badge" class="hidden text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium"></span>
+            <div class="text-right">
+              <div id="user-name" class="text-sm font-semibold text-slate-700"></div>
+              <div id="user-role" class="text-xs text-slate-400"></div>
+            </div>
+            <button id="logout-btn" class="text-sm text-red-600 hover:underline">ออกจากระบบ</button>
+          </div>
+        </div>
+      </header>
+      <main id="view" class="p-4 lg:p-6 max-w-7xl mx-auto"></main>
+    </div>
+  </div>
+</div>
+
+<div id="modal-root" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"></div>
+<div id="toast-root" class="fixed bottom-4 right-4 z-[60] space-y-2"></div>
+<div id="print-area"></div>
+
+<script>
+/* ============================================================
+ * ตั้งค่าระบบ — ★ ใส่ Web app URL จาก Google Apps Script ที่นี่ ★
+ * (เว้นว่าง = โหมดตัวอย่าง Mockup ใช้ข้อมูลจำลองในเบราว์เซอร์)
+ * ============================================================ */
+const APP_CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbwlMN1T5ZyeOVbGfLHDIsOd3d81pBqwhXNRLPSPM51mDi1KnEx6ucEBv3r1PskaBA9W/exec',
+  ORG_FULL: 'ภาควิชาเทคโนโลยีและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม',
+  ORG_ADDRESS: 'สำนักงานอธิการบดี ตำบลขามเรียง อำเภอกันทรวิชัย จังหวัดมหาสารคาม 44150',
+  DOC_PREFIX: 'อว 0503.5(6)/',
+};
+const DEMO = !APP_CONFIG.API_URL;
+
+const DOC_TYPES = { internal:'บันทึกข้อความภายในหน่วยงาน', incoming:'หนังสือรับจากภายนอก', outgoing:'หนังสือส่งภายนอกหน่วยงาน' };
+const URG = ['ปกติ','ด่วน','ด่วนมาก','ด่วนที่สุด'];
+const CLS = ['ปกติ','ลับ','ลับมาก','ลับที่สุด'];
+const THAI_M = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const THAI_M_S = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+/* ---------- ตัวช่วยทั่วไป ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const BTN_P='px-4 py-2 rounded-lg bg-brand-700 text-white text-sm font-medium hover:bg-brand-800 transition';
+const BTN_G='px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition';
+const BTN_O='px-4 py-2 rounded-lg border border-brand-600 text-brand-700 text-sm font-medium hover:bg-brand-50 transition';
+const INP='w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-1 focus:ring-brand-600 text-sm';
+const LBL='block text-sm font-medium text-slate-700 mb-1';
+
+function parseDate(v){ const s=String(v||''); const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return new Date(+m[1],+m[2]-1,+m[3]); const d=new Date(s); return isNaN(d)?null:d; }
+function thaiDate(v){ const d=parseDate(v); return d? `${d.getDate()} ${THAI_M[d.getMonth()]} ${d.getFullYear()+543}` : '—'; }
+function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function dtLoc(v){ const d=new Date(v); return isNaN(d)?String(v||''):d.toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'}); }
+function safeParse(s){ try{return JSON.parse(s||'{}')}catch(e){return{}} }
+
+function toast(msg, type='success'){
+  const el=document.createElement('div');
+  el.className=`px-4 py-3 rounded-lg shadow-lg text-white text-sm ${type==='error'?'bg-red-600':type==='info'?'bg-slate-700':'bg-emerald-600'}`;
+  el.textContent=msg; $('#toast-root').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)},2800);
+}
+function openModal(title, bodyHTML){
+  $('#modal-root').innerHTML=`<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10"><h3 class="font-bold text-slate-800">${title}</h3>
+    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-xl">✕</button></div>
+    <div class="p-5">${bodyHTML}</div></div>`;
+  $('#modal-root').classList.remove('hidden');
+}
+function closeModal(){ $('#modal-root').classList.add('hidden'); $('#modal-root').innerHTML=''; }
+ $('#modal-root').addEventListener('click', e=>{ if(e.target.id==='modal-root') closeModal(); });
+function confirmBox(msg){
+  return new Promise(res=>{
+    openModal('ยืนยันการดำเนินการ',`<p class="text-slate-600">${msg}</p>
+      <div class="flex gap-2 justify-end mt-5"><button id="cf-no" class="${BTN_G}">ยกเลิก</button><button id="cf-yes" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">ยืนยัน</button></div>`);
+    $('#cf-yes').onclick=()=>{closeModal();res(true)}; $('#cf-no').onclick=()=>{closeModal();res(false)};
+  });
+}
+
+/* ---------- State ---------- */
+let S = { token: localStorage.getItem('edoc_token')||'', user:null, docs:[], cats:[], users:[], logs:[],
+          filters:{q:'',type:'',cat:'',from:'',to:''}, view:'dashboard', param:null, viewingDoc:null };
+let pendingFile = null;
+
+function can(area, act){
+  if(!S.user) return false;
+  if(S.user.role==='admin') return true;
+  const p = safeParse(S.user.permissions);
+  return !!(p[area] && p[area][act]);
+}
+
+/* ============================================================
+ * ชั้นเรียก API — เชื่อม Google Apps Script (หรือโหมดตัวอย่าง)
+ * ============================================================ */
+async function api(action, data={}){
+  if(DEMO) return demoApi(action, data);
+  try{
+    const res = await fetch(APP_CONFIG.API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'}, // หลีกเลี่ยง CORS preflight
+      body: JSON.stringify({...data, action, token:S.token})
+    });
+    const out = await res.json();
+    if(out && out.success===false && /เซสชัน|ไม่พบผู้ใช้/.test(out.message||'')) forceLogout();
+    return out;
+  }catch(err){ return {success:false, message:'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ: '+err.message}; }
+}
+
+/* ---------- โหมดตัวอย่าง (Mockup) — ข้อมูลจำลองใน localStorage ---------- */
+const DEMO_SEED = {
+  users:[
+    {id:'U0001',email:'admin@msu.ac.th',pass:'Admin@123',name:'ผู้ดูแลระบบ',position:'ผู้ดูแลระบบ',role:'admin',permissions:'{}',status:'active',lastLogin:''},
+    {id:'U0002',email:'somchai@msu.ac.th',pass:'123456',name:'สมชาย ใจดี',position:'อาจารย์ ภาควิชาเทคโนโลยีและสื่อสารการศึกษา',role:'user',permissions:JSON.stringify({documents:{create:1,read:1,update:1}}),status:'active',lastLogin:''},
+    {id:'U0003',email:'somsri@msu.ac.th',pass:'123456',name:'สมศรี เรียบร้อย',position:'นักวิชาการศึกษา',role:'user',permissions:JSON.stringify({documents:{read:1}}),status:'active',lastLogin:''}
+  ],
+  cats:[
+    {id:'C01',code:'01',name:'การบริหารทั่วไป',description:'ระเบียบ คำสั่ง ประกาศ งานสารบรรณทั่วไป',active:true,sort:1},
+    {id:'C02',code:'02',name:'การเงินและงบประมาณ',description:'การเบิกจ่าย งบประมาณ การเงินและบัญชี',active:true,sort:2},
+    {id:'C03',code:'03',name:'บุคลากร',description:'การแต่งตั้ง การลา การเดินทางไปปฏิบัติราชการ',active:true,sort:3},
+    {id:'C04',code:'04',name:'การจัดซื้อจัดจ้างและทรัพย์สิน',description:'พัสดุ ครุภัณฑ์ การจัดซื้อจัดจ้าง',active:true,sort:4},
+    {id:'C05',code:'05',name:'การศึกษาและวิชาการ',description:'หลักสูตร การเรียนการสอน การวิจัย',active:true,sort:5},
+    {id:'C06',code:'06',name:'การประชุมและกิจกรรม',description:'ระเบียนวาระการประชุม มติที่ประชุม',active:true,sort:6},
+    {id:'C07',code:'07',name:'โครงการและแผนงาน',description:'แผนปฏิบัติการ โครงการ',active:true,sort:7},
+    {id:'C08',code:'08',name:'ประชาสัมพันธ์และสื่อสารการศึกษา',description:'ข่าวสาร ประชาสัมพันธ์ สื่อการสอน',active:true,sort:8},
+    {id:'C09',code:'09',name:'กิจการนักศึกษา',description:'การฝึกปฏิบัติงาน สหกิจศึกษา',active:true,sort:9},
+    {id:'C10',code:'10',name:'อื่น ๆ',description:'เอกสารที่ไม่เข้าหมวดข้างต้น',active:true,sort:10}
+  ],
+  docs:[
+    {id:'D00001',number:'ศษ 0301/ว 0001/2568',refNumber:'',type:'internal',title:'ขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการ "การพัฒนาสื่อการสอนดิจิทัลสำหรับการจัดการเรียนรู้ออนไลน์"',date:'2025-01-15',categoryId:'C07',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา มีนโยบายพัฒนาศักยภาพอาจารย์และบุคลากรด้านการผลิตสื่อการสอนดิจิทัล เพื่อยกระดับคุณภาพการจัดการเรียนรู้ จึงขออนุมัติจัดโครงการอบรมเชิงปฏิบัติการดังกล่าว ระหว่างวันที่ 20-21 มีนาคม 2568 ณ ห้องปฏิบัติการคอมพิวเตอร์ ภาควิชาเทคโนโลยีและสื่อสารการศึกษา โดยมีงบประมาณดำเนินการ 45,000 บาท\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'admin@msu.ac.th',createdAt:'2025-01-15T09:30:00',updatedAt:'2025-01-15T09:30:00',remark:''},
+    {id:'D00002',number:'ศษ 0301/ว 0002/2568',refNumber:'',type:'internal',title:'ขออนุมัติเบิกจ่ายเงินค่าใช้จ่ายในการจัดประชุมทางวิชาการ ครั้งที่ 1/2568',date:'2025-02-03',categoryId:'C02',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'ด้วยภาควิชาเทคโนโลยีและสื่อสารการศึกษา ได้จัดประชุมทางวิชาการขึ้นเมื่อวันที่ 28 มกราคม 2568 ณ ห้องประชุมภาควิชาฯ มีผู้เข้าร่วมประชุม 25 คน ค่าใช้จ่ายรวมทั้งสิ้น 8,500 บาท ขอเบิกจ่ายจากงบประมาณรายจ่ายดำเนินงาน ประจำปีงบประมาณ พ.ศ. 2568\nจึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ',signer:'ผศ.ดร.ประเสริฐ จิตต์มั่น',signerPosition:'หัวหน้าภาควิชาเทคโนโลยีและสื่อสารการศึกษา',fileId:'',fileName:'',fileUrl:'',status:'active',createdBy:'somchai@msu.ac.th',createdAt:'2025-02-03T10:15:00',updatedAt:'2025-02-03T10:15:00',remark:''},
+    {id:'D00003',number:'ศษ 0301/ว 0003/2568',refNumber:'',type:'internal',title:'รายงานผลการประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568',date:'2025-02-20',categoryId:'C06',fromParty:'',toParty:'คณบดีคณะศึกษาศาสตร์',urgency:'ปกติ',classification:'ปกติ',content:'การประชุมภาควิชาเทคโนโลยีและสื่อสารการศึกษา ครั้งที่ 2/2568 จัดขึ้นเมื่อวันที่ 19 กุมภาพันธ์ 2568 มีมติที่สำคัญ ดังนี้\n1. เห็นชอบแผนการจัดการเรียนการสอนภาคเรียนที่ 1/2568\n2. เห็นชอบการจัดซื้อคร
